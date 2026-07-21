@@ -1,0 +1,63 @@
+import type { Work } from '../types/work'
+
+export const works: readonly Work[] = [
+  {
+    id: 'dummy-work-01',
+    slug: 'display-sample-01',
+    title: '展示作品（仮）01',
+    description: '作品説明（仮）',
+    technologies: ['使用技術（仮）A', '使用技術（仮）B'],
+    materials: ['素材（仮）A'],
+    media: ['メディウム（仮）'],
+    exhibitionLocation: '7A101',
+    status: 'published',
+    sortOrder: 1,
+  },
+  {
+    id: 'dummy-work-02',
+    slug: 'display-sample-02',
+    title: '展示作品（仮）02',
+    status: 'published',
+    sortOrder: 2,
+  },
+  {
+    id: 'dummy-work-03',
+    slug: 'display-sample-03',
+    title: '展示作品（仮）03',
+    status: 'published',
+    sortOrder: 3,
+  },
+  {
+    id: 'dummy-work-04',
+    slug: 'display-sample-04',
+    title: '展示作品（仮）04',
+    technologies: ['技術情報（仮）'],
+    exhibitionLocation: '7A202',
+    status: 'published',
+    sortOrder: 4,
+  },
+  {
+    id: 'dummy-work-05',
+    slug: 'display-sample-05',
+    title: '展示作品（仮）05',
+    materials: ['素材情報（仮）A', '素材情報（仮）B'],
+    media: ['複合メディア（仮）'],
+    exhibitionLocation: '7A207',
+    status: 'published',
+    sortOrder: 5,
+  },
+  {
+    id: 'dummy-work-06',
+    slug: 'display-sample-06',
+    title: '展示作品（仮）06',
+    status: 'published',
+    sortOrder: 6,
+  },
+  {
+    id: 'dummy-draft-01',
+    slug: 'unpublished-sample',
+    title: '非公開作品（仮）',
+    status: 'draft',
+    sortOrder: 7,
+  },
+]

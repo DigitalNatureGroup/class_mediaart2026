@@ -1,0 +1,17 @@
+.range {
+  display: inline;
+}
+
+.date {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.end {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.separator {
+  display: inline-block;
+}

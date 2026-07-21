@@ -1,0 +1,272 @@
+/*
+ * stArt — Design Tokens
+ * Philosophy: Editorial Constellation
+ *
+ * The exhibition ships with data-theme="dark". The light palette is retained
+ * as an intentional alternate foundation, not as a promise of a theme switcher.
+ * Components must consume semantic tokens rather than the --palette-* values.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Palette primitives: warm paper, ink, and a restrained signal yellow. */
+  --palette-canvas: #f2f0e7;
+  --palette-surface: #e9e7de;
+  --palette-surface-raised: #deddd3;
+  --palette-inverse: #151713;
+  --palette-ink: #1a1c18;
+  --palette-ink-muted: #50544c;
+  --palette-ink-faint: #696e64;
+  --palette-line: #74796e;
+  --palette-line-subtle: #c5c7bd;
+  --palette-signal: #596400;
+  --palette-signal-hover: #444d00;
+  --palette-signal-active: #333a00;
+  --palette-signal-soft: #dce58a;
+  --palette-focus: #4d5700;
+  --palette-success: #35623f;
+  --palette-warning: #7c5700;
+  --palette-error: #9a3434;
+  --palette-info: #315f72;
+  --palette-overlay: rgb(21 23 19 / 72%);
+
+  /* Semantic color tokens. */
+  --color-bg-primary: var(--palette-canvas);
+  --color-bg-secondary: var(--palette-surface);
+  --color-bg-tertiary: var(--palette-surface-raised);
+  --color-bg-inverse: var(--palette-inverse);
+  --color-text-primary: var(--palette-ink);
+  --color-text-secondary: var(--palette-ink-muted);
+  --color-text-tertiary: var(--palette-ink-faint);
+  --color-text-inverse: var(--palette-canvas);
+  --color-text-link: var(--palette-signal);
+  --color-text-on-accent: #f8f7ee;
+  --color-border-primary: var(--palette-line);
+  --color-border-secondary: var(--palette-line-subtle);
+  --color-border-focus: var(--palette-focus);
+  --color-accent-primary: var(--palette-signal);
+  --color-accent-primary-hover: var(--palette-signal-hover);
+  --color-accent-primary-active: var(--palette-signal-active);
+  --color-accent-secondary: var(--palette-signal-soft);
+  --color-status-success: var(--palette-success);
+  --color-status-warning: var(--palette-warning);
+  --color-status-error: var(--palette-error);
+  --color-status-info: var(--palette-info);
+  --color-surface-overlay: var(--palette-overlay);
+  --color-selection-bg: var(--palette-signal-soft);
+  --color-selection-text: var(--palette-ink);
+  --color-decoration-line: rgb(26 28 24 / 24%);
+  --color-decoration-dot: var(--palette-signal);
+  --color-media-placeholder: var(--palette-surface-raised);
+  --color-media-placeholder-ink: var(--palette-ink-muted);
+  --color-star-primary: #252a25;
+  --color-star-secondary: #596259;
+  --color-star-signal: var(--palette-signal);
+  --color-star-line: #768076;
+
+  /* Typography. Font loading remains separate from font assignment. */
+  --font-family-display: "Syne", "Arial Black", "Helvetica Neue", sans-serif;
+  --font-family-body: "IBM Plex Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --font-family-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-label: 0.8125rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: clamp(1.25rem, 1.8vw, 1.5rem);
+  --font-size-xl: clamp(1.5rem, 2.6vw, 2.125rem);
+  --font-size-2xl: clamp(2rem, 4vw, 3.5rem);
+  --font-size-3xl: clamp(3rem, 7vw, 6.5rem);
+  --font-size-4xl: clamp(4.75rem, 16vw, 14rem);
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-none: 0.82;
+  --line-height-tight: 1.12;
+  --line-height-snug: 1.35;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.85;
+  --line-height-display-jp: 1.62;
+  --line-height-body-jp: 1.72;
+
+  --letter-spacing-tight: -0.045em;
+  --letter-spacing-display: -0.065em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.08em;
+  --letter-spacing-editorial: 0.025em;
+  --letter-spacing-label: 0.14em;
+  --letter-spacing-jp-body: 0.01em;
+  --letter-spacing-jp-label: 0.06em;
+
+  /* Eight-pixel editorial spacing rhythm with fine optical steps. */
+  --space-0: 0;
+  --space-1: 0.125rem;
+  --space-2: 0.25rem;
+  --space-3: 0.375rem;
+  --space-4: 0.5rem;
+  --space-5: 0.75rem;
+  --space-6: 1rem;
+  --space-7: 1.5rem;
+  --space-8: 2rem;
+  --space-9: 3rem;
+  --space-10: 4rem;
+  --space-11: 6rem;
+  --space-12: 8rem;
+  --space-13: 12rem;
+  --space-14: 16rem;
+
+  /* Layout. */
+  --max-width-reading: 42rem;
+  --max-width-content: 60rem;
+  --max-width-wide: 76rem;
+  --max-width-page: 90rem;
+  --page-gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --grid-gutter: clamp(1rem, 2.2vw, 2rem);
+  --section-space: clamp(6rem, 13vw, 12rem);
+  --header-height: clamp(4rem, 6vw, 5rem);
+  --hero-min-height: 100svh;
+  --content-rule-width: 1px;
+
+  /* Breakpoint reference values. CSS custom properties cannot be used in media queries. */
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Geometry stays quiet: radii are reserved for controls and media edges. */
+  --border-radius-none: 0;
+  --border-radius-sm: 0.125rem;
+  --border-radius-md: 0.25rem;
+  --border-radius-lg: 0.5rem;
+  --border-radius-full: 999px;
+
+  /* Shadows are intentionally scarce in an editorial layout. */
+  --shadow-sm: 0 1px 0 rgb(21 23 19 / 10%);
+  --shadow-md: 0 0.75rem 2.5rem rgb(21 23 19 / 12%);
+  --shadow-lg: 0 1.5rem 5rem rgb(21 23 19 / 16%);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 3px;
+  --shadow-focus: 0 0 0 var(--focus-ring-width) var(--color-border-focus);
+
+  /* Motion supports orientation and feedback, never ambient decoration. */
+  --duration-instant: 50ms;
+  --duration-fast: 140ms;
+  --duration-normal: 240ms;
+  --duration-slow: 380ms;
+  --duration-slower: 560ms;
+  --easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --easing-out: cubic-bezier(0, 0, 0.2, 1);
+  --easing-emphasis: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Layer order. */
+  --z-index-base: 0;
+  --z-index-header: 20;
+  --z-index-menu-backdrop: 30;
+  --z-index-menu: 40;
+  --z-index-focus: 50;
+
+  /* Component-level tokens. */
+  --hero-title-size: var(--font-size-4xl);
+  --hero-title-leading: var(--line-height-none);
+  --hero-title-tracking: var(--letter-spacing-display);
+  --hero-background-image: none;
+  --hero-background-position: center;
+  --hero-background-size: cover;
+  --section-scroll-offset: calc(var(--header-height) + var(--space-7));
+  --navigation-gap: clamp(1rem, 2.4vw, 2.5rem);
+  --work-grid-min-column: 16rem;
+  --work-media-aspect-ratio: 4 / 3;
+  --work-detail-media-aspect-ratio: 16 / 10;
+  --map-aspect-ratio: 16 / 9;
+  --decoration-grid-size: clamp(4rem, 9vw, 8rem);
+  --decoration-dot-size: 0.1875rem;
+  --decoration-line-opacity: 0.55;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --palette-canvas: #060807;
+  --palette-surface: #0d110f;
+  --palette-surface-raised: #151a17;
+  --palette-inverse: #efeee3;
+  --palette-ink: #efeee3;
+  --palette-ink-muted: #b8b9ad;
+  --palette-ink-faint: #8b8e83;
+  --palette-line: #62665c;
+  --palette-line-subtle: #30342d;
+  --palette-signal: #d8e36e;
+  --palette-signal-hover: #e4ed8f;
+  --palette-signal-active: #c7d25b;
+  --palette-signal-soft: #31371b;
+  --palette-focus: #e8f18c;
+  --palette-success: #86c995;
+  --palette-warning: #e2bb65;
+  --palette-error: #e9928d;
+  --palette-info: #8fc2d3;
+  --palette-overlay: rgb(7 8 7 / 82%);
+  --color-text-on-accent: #171a10;
+  --color-decoration-line: rgb(239 238 227 / 16%);
+  --color-media-placeholder: #1b1e19;
+  --color-media-placeholder-ink: #a4a79b;
+  --color-star-primary: #edf2ec;
+  --color-star-secondary: #839189;
+  --color-star-signal: #dce86c;
+  --color-star-line: #a3b2a9;
+  --shadow-sm: 0 1px 0 rgb(0 0 0 / 28%);
+  --shadow-md: 0 0.75rem 2.5rem rgb(0 0 0 / 30%);
+  --shadow-lg: 0 1.5rem 5rem rgb(0 0 0 / 38%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --palette-canvas: #060807;
+    --palette-surface: #0d110f;
+    --palette-surface-raised: #151a17;
+    --palette-inverse: #efeee3;
+    --palette-ink: #efeee3;
+    --palette-ink-muted: #b8b9ad;
+    --palette-ink-faint: #8b8e83;
+    --palette-line: #62665c;
+    --palette-line-subtle: #30342d;
+    --palette-signal: #d8e36e;
+    --palette-signal-hover: #e4ed8f;
+    --palette-signal-active: #c7d25b;
+    --palette-signal-soft: #31371b;
+    --palette-focus: #e8f18c;
+    --palette-success: #86c995;
+    --palette-warning: #e2bb65;
+    --palette-error: #e9928d;
+    --palette-info: #8fc2d3;
+    --palette-overlay: rgb(7 8 7 / 82%);
+    --color-text-on-accent: #171a10;
+    --color-decoration-line: rgb(239 238 227 / 16%);
+    --color-media-placeholder: #1b1e19;
+    --color-media-placeholder-ink: #a4a79b;
+    --color-star-primary: #edf2ec;
+    --color-star-secondary: #839189;
+    --color-star-signal: #dce86c;
+    --color-star-line: #a3b2a9;
+    --shadow-sm: 0 1px 0 rgb(0 0 0 / 28%);
+    --shadow-md: 0 0.75rem 2.5rem rgb(0 0 0 / 30%);
+    --shadow-lg: 0 1.5rem 5rem rgb(0 0 0 / 38%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 1ms;
+    --duration-fast: 1ms;
+    --duration-normal: 1ms;
+    --duration-slow: 1ms;
+    --duration-slower: 1ms;
+  }
+}

@@ -1,0 +1,60 @@
+.button {
+  position: fixed;
+  right: max(var(--page-gutter), env(safe-area-inset-right));
+  bottom: max(var(--space-7), env(safe-area-inset-bottom));
+  z-index: var(--z-index-header);
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  visibility: hidden;
+  background: color-mix(in srgb, var(--color-bg-primary) 82%, transparent);
+  border: 0;
+  opacity: 0;
+  place-items: center;
+  transform: translateY(var(--space-4));
+  transition:
+    opacity var(--duration-normal) var(--easing-default),
+    transform var(--duration-normal) var(--easing-default),
+    visibility var(--duration-normal) step-end;
+  backdrop-filter: blur(0.25rem);
+}
+
+.button[data-visible='true'] {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--duration-normal) var(--easing-default),
+    transform var(--duration-normal) var(--easing-default),
+    visibility 0s step-start;
+}
+
+.button svg {
+  width: 1.375rem;
+  height: 1.375rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 1.5;
+}
+
+.button:hover svg {
+  transform: translateY(-0.125rem);
+}
+
+:global(html.starJourneyEnabled[data-moving-to-top='true']) {
+  scroll-snap-type: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button[data-visible='true'],
+  .button:hover svg {
+    transition: none;
+    transform: none;
+  }
+}

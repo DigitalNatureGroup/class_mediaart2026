@@ -1,0 +1,45 @@
+.notFound {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+}
+
+.code {
+  color: var(--color-accent-primary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-label);
+}
+
+.title {
+  max-width: 14ch;
+  margin-top: var(--space-6);
+  overflow-wrap: anywhere;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-3xl);
+  letter-spacing: 0.02em;
+  line-height: var(--line-height-tight);
+}
+
+.description {
+  max-width: var(--max-width-reading);
+  margin-top: var(--space-7);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin-top: var(--space-9);
+}
+
+.links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--color-text-primary);
+  text-underline-offset: 0.3em;
+}
