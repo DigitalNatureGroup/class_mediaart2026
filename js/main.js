@@ -309,7 +309,7 @@
   function initTickers() {
     const mainUnit =
       '<span class="unit"><em>stArt</em><span class="s">✦</span>MEDIA ART EXHIBITION 2026' +
-      '<span class="s">✦</span>7.29 WED — 7.31 FRI<span class="s">✦</span>9:00–18:00' +
+      '<span class="s">✦</span>7.29 WED — 7.31 FRI<span class="s">✦</span>10:00–18:00' +
       '<span class="s">✦</span>KASUGA AREA, UNIV. OF TSUKUBA<span class="s">✦</span>FREE ADMISSION<span class="s">✦</span></span>';
     buildTicker($("#tickerHero"), mainUnit, 26, 1);
 
