@@ -1,202 +1,82 @@
-# stArt 展示会Webサイト
+# stArt — メディアアート展 2026（展示会サイト）
 
-筑波大学の授業「GE72501 メディアアート」で開催する、学生メディアアート展 `stArt` のWebサイトです。
+筑波大学 開講講義「メディアアート」の展示会サイト。
+**30人の受講者の作品＝30の星** をスター・ジャーニー（星座の横断）でめぐる、没入型ワンページです。
 
-トップページで開催情報と展示コンセプトを案内し、作品一覧と作品個別ページをHashRouterで提供します。開催情報、作品データ、色、書体、ロゴ、背景素材は表示コンポーネントから分離しています。
+## 見かた・開きかた
 
-トップページは各セクションを一つの星として扱い、縦スクロールに合わせて背景の星座が横方向へ移動する構成です。右側（モバイルでは画面下部）の星ナビゲーションから、各セクションへ直接移動できます。
+- 公開サイト: **https://digitalnaturegroup.github.io/class_mediaart2026/**
+- ローカルでは `index.html` をダブルクリックするだけで開けます（ビルド不要）
+- ライブラリ（GSAP / ScrollTrigger / Lenis）と背景動画はローカル同梱なのでオフラインでも動作
+  （Webフォントのみ通信時に読込。オフライン時は代替フォント）
 
-背景の星空は [src/components/InteractiveStarfield](src/components/InteractiveStarfield) のCanvasで生成しています。星は自律的に漂い、ポインター付近で一時的な星座をつくり、クリック位置から波紋が広がります。スクロール速度と現在セクションも星の動きへ反映されます。`prefers-reduced-motion` が有効な環境では連続アニメーションと波紋を停止し、スクロールスナップも弱めます。
+## 技術スタック
 
-## 必要な環境
+実際の受賞展示会サイトで使われている構成に合わせています：
 
-- Node.js 24
-- npm 11以降
-- Playwrightの画面テストを行う場合はGoogle Chrome
+| 役割 | 使用技術 |
+|---|---|
+| 慣性スムーススクロール | **Lenis** |
+| スクロール演出・タイムライン | **GSAP + ScrollTrigger**（文字分割リビール／スクラブ視差／進捗バー） |
+| 背景 | **ループ動画**（ffmpegでクロスフェード加工した星空タイムラプス）＋ Canvas 2D の星屑・流れ星 |
+| 星座・生成アート | 生 Canvas 2D（依存なし） |
+| タイポグラフィ | Zen Old Mincho × Space Grotesk × Instrument Serif(italic) |
 
-## ローカルで起動する
+## 構成
 
-```bash
-npm install
-npm run dev
+```
+class_mediaart2026/
+├── index.html            … マークアップ
+├── css/style.css         … スタイル一式
+├── js/
+│   ├── data.js           … 30作品データ（★差し替えはここ）
+│   ├── sky.js            … 背景の星屑/生成アートのCanvasエンジン
+│   └── main.js           … プリローダー・Lenis・GSAP演出・モーダル等
+├── libs/                 … gsap / ScrollTrigger / lenis（ローカル同梱）
+├── assets/               … 最適化済み画像・背景動画(bg-stars.mp4)
+└── .github/workflows/    … GitHub Pages 自動デプロイ
 ```
 
-表示された `http://localhost:5173/` をブラウザで開きます。
+## ページの流れ
 
-依存関係を `package-lock.json` と完全に一致させたい場合は、`npm install` の代わりに次を使います。
+1. **プリローダー** — 実アセット読込に連動した % カウンター → ステートメント2行（クロスフェード）→ ワイプでヒーローへ。
+   **スクロールでは中断されません**（最後まで必ず再生）。飛ばしたいときは右上の SKIP ボタン
+2. **ヒーロー** — 星の軌跡写真が回転・呼吸＋開幕カウントダウン（会期中は「ただいま開催中」に自動切替）
+3. **ティッカー** — 会期情報の無限マーキー（スクロール速度・方向に反応）
+4. **01 CONCEPT** — st**A**rt の「A」が手描き星PNGとフリップするタイポ演出＋行マスクのステートメント
+5. **02 SUPERVISOR** — 指導教員 落合陽一（チェキ写真＋手書きキャプション、3Dチルト）
+6. **03 WORKS** — 30作品が**2列の無限ループ・マーキー**でめぐる回廊（上段と下段が逆方向、わずかに傾いたステージ）。カードを押すと作品モーダル。カーソルを重ねるか「自動移動を停止」ボタンで流れが止まる
+7. **04 VISIT** — 開催情報＋**Googleマップ埋め込み**（下の「GOOGLE MAPで開く」ボタンで遷移）
+8. **フッター** — スクロールで迫り上がる巨大ロゴ
 
-```bash
-npm ci
+## スター・ジャーニー（スクロールUX）
+
+- 5つのセクション＝5つの星。**縦スクロールに合わせて背景の星座トラックが横方向へ移動**し
+  （-54vw/区間）、現在の星が画面のフォーカスリング（回転軌道＋金の点）に着地する
+- **セクション自体も左右へスライド**:各セクションはカメラ経路上の位置（0 / +14 / -11 / +13 / -8 vw）を持ち、
+  スクロール中はカメラとの差分だけ横に動く（smoothstep補間・モバイルは振幅24%）
+- スクロールが静止すると、近くのセクション頭へ**そっと吸着**（Lenis連携の自前スナップ）
+- ヘッダーのナビ強調もジャーニーの現在星と同期。背景Canvasの星屑も進行に合わせて横にドリフト
+- 上記に加えて:見出しの文字分割リビール、行マスク、巨大数字の視差、フッターロゴのスクラブ、
+  ヒーローロゴの立体チルト、星のカーソルレンズ、速度伸縮カーソル、チェキ3Dチルト
+
+## 作品データの差し替え（本番用）
+
+[js/data.js](js/data.js) の `W = [ ... ]` に30作品が並んでいます。1件はこの形：
+
+```js
+{ t:"作品名", e:"英題", a:"氏名", g:"所属 学年",
+  c:"light",   // light/sound/video/body/inter/gen
+  m:"7A101",   // 展示教室
+  s:1,         // 星の色 0-5（青白→白→金→橙→ロゼ）
+  d:"紹介文（2〜3文）" },
 ```
 
-## 検証とビルド
+偶数番目・奇数番目の作品がマーキーの上段・下段に振り分けられます。
 
-```bash
-npm run lint
-npm run typecheck
-npm test
-npm run test:e2e
-npm run build
-```
+> **注意**: 現在の出展者名・作品はすべて仮のダミーです（フッターにも注記あり）。
 
-- `npm test`：日付表示、作品Repository、GitHub Pagesのbase計算を検証
-- `npm run test:e2e`：Chromeを使い、375px、768px、1440pxで星ナビゲーション、作品遷移、Not Found、基本アクセシビリティを検証
-- `npm run build`：`dist/`へproduction buildを生成
+## デプロイ
 
-ビルド結果をローカルで確認する場合は次を使います。
-
-```bash
-npm run preview
-```
-
-## GitHub Pagesへ公開する
-
-1. GitHub上にリポジトリを作成し、このプロジェクトを`main`ブランチへpushします。
-2. リポジトリの「Settings → Pages」を開きます。
-3. 「Build and deployment」のSourceで「GitHub Actions」を選択します。
-4. `main`へのpush、またはActions画面からの手動実行で `.github/workflows/deploy.yml` が動作します。
-
-ワークフローはlint、単体テスト、型チェックを含むビルドを実行し、`dist/`をGitHub Pagesへ公開します。
-
-Viteの `base` は `vite.config.ts` で `GITHUB_REPOSITORY` から自動生成します。例えばリポジトリ名が `mediaartsite` なら、公開時のbaseは `/mediaartsite/`、ローカルでは `/` です。URLはHashRouterを使うため次の形式になります。
-
-```text
-https://ユーザー名.github.io/mediaartsite/#/
-https://ユーザー名.github.io/mediaartsite/#/works
-https://ユーザー名.github.io/mediaartsite/#/works/display-sample-01
-```
-
-## 開催情報を変更する
-
-開催情報とトップページの文言は [src/config/site.ts](src/config/site.ts) に集約しています。
-
-変更できる主な項目：
-
-- `title`：展示タイトル
-- `event.startDate`、`event.endDate`：`YYYY-MM-DD`形式の会期
-- `event.venueName`：大学・エリア名
-- `event.venues`：教室番号の配列
-- `event.openingHours`：開場時間
-- `event.organizer`：主催
-- `statement.short`：Heroの短文
-- `statement.full`：コンセプト全文
-- `access.summary`：アクセス文
-- `access.mapEmbedUrl`：Google Mapsの埋め込みURL
-- `socialAccounts`：X、InstagramのURL
-- `navigation`：ヘッダーのナビゲーション
-
-`event.openingHours` は省略されている間、項目名を含めて表示されません。
-
-SNSはフッター右下にアイコンで表示します。`url` がない間は「準備中」として読み上げられる非リンク表示になり、開設後は次のようにURLを追加するとリンクへ切り替わります。
-
-```ts
-socialAccounts: [
-  { label: 'X', url: 'https://x.com/...' },
-  { label: 'Instagram', url: 'https://www.instagram.com/...' },
-]
-```
-
-## ロゴと背景素材を差し替える
-
-素材は `public/assets/` に配置します。設定内のパスには先頭の `/` を付けないでください。GitHub Pagesのリポジトリbaseが自動で付与されます。
-
-```ts
-logo: {
-  text: 'stArt',
-  imageSrc: 'assets/logo.svg',
-  imageAlt: 'stArt',
-},
-visualAssets: {
-  heroBackgroundSrc: 'assets/hero-background.webp',
-},
-```
-
-- ロゴ画像がない場合は `logo.text` が表示されます。
-- 背景素材にはポスターから切り出した背景、図形、模様だけを使用してください。
-- 展示名、会期、会場などの文字は画像へ焼き込まず、HTMLのまま保ちます。
-- 背景の位置やサイズは [src/styles/tokens.css](src/styles/tokens.css) の `--hero-background-position` と `--hero-background-size` で調整できます。
-
-## 色とフォントを変更する
-
-色、余白、書体、画像比率、モーションは [src/styles/tokens.css](src/styles/tokens.css) に集約しています。初期版は暗色テーマを `index.html` の `data-theme="dark"` で指定しています。
-
-- `--font-family-display`：タイトル・強調用のSyne
-- `--font-family-body`：本文・UI用のIBM Plex Sans JP
-- `--palette-*`：明色・暗色パレット
-- `--color-*`：コンポーネントが参照する意味ベースの色
-- `--section-space`、`--page-gutter`：余白
-- `--duration-*`：操作時のモーション
-
-Google Fontsの読み込み設定は `index.html` にあります。ポスターの書体へ変更する場合は、読み込み先と2つのフォントトークンを合わせて変更します。
-
-## 作品を追加する
-
-初期作品データは [src/data/works.ts](src/data/works.ts) にあります。現在のデータはすべて表示確認用のダミーです。
-
-```ts
-{
-  id: 'stable-work-id',
-  slug: 'url-friendly-slug',
-  title: '作品名',
-  artistName: '作者名',
-  mainImage: {
-    src: 'assets/works/example/main.webp',
-    alt: '作品の外観を説明する代替テキスト',
-  },
-  additionalImages: [
-    {
-      src: 'assets/works/example/detail.webp',
-      alt: '作品の細部を説明する代替テキスト',
-      caption: '任意のキャプション',
-    },
-  ],
-  description: '作品説明',
-  technologies: ['使用技術'],
-  materials: ['素材'],
-  media: ['メディウム'],
-  exhibitionLocation: '7A101',
-  artistLinks: [
-    { label: '作者Webサイト', url: 'https://example.com' },
-  ],
-  status: 'published',
-  sortOrder: 1,
-}
-```
-
-運用上の注意：
-
-- `id` は一度公開した後に変更しないでください。
-- `slug` は小文字英数字とハイフンを基本とし、重複させないでください。
-- `status: 'draft'` は一覧・詳細・前後移動に表示されません。
-- `sortOrder` の小さい作品から表示されます。
-- 作者名などの任意項目がない場合、その項目全体が非表示になります。
-- `mainImage` がない、または読み込みに失敗した場合はCSSプレースホルダーが表示されます。
-- 一覧とトップの作品プレビューには作者名を表示しません。
-
-## CSV・JSON・Googleスプレッドシートへ移行する
-
-画面は作品配列を直接参照せず、[src/repositories/worksRepository.ts](src/repositories/worksRepository.ts) の契約を経由しています。
-
-将来の移行手順：
-
-1. CSV、JSON、またはGoogleスプレッドシートの公開データを読み込むRepositoryを新しく作ります。
-2. 外部データの列を `Work` 型へ変換し、空文字・配列・公開状態を正規化します。
-3. `getPublished()` と `getBySlug(slug)` を実装します。
-4. [src/hooks/usePublishedWorks.ts](src/hooks/usePublishedWorks.ts) が参照するRepositoryを差し替えます。
-5. CORS、取得失敗、キャッシュ、非公開データがレスポンスに含まれないことを確認します。
-
-Googleスプレッドシートを使う場合は、公開CSVを直接読む方法か、Apps Scriptなどで必要な列だけをJSONとして返す方法が考えられます。学生の個人情報や下書きを含むシートを、そのままWeb公開しないでください。
-
-## 主なディレクトリ
-
-```text
-.design/start-exhibition-site/  デザインブリーフ、情報設計、トークン案、タスク
-.github/workflows/             GitHub Pages自動デプロイ
-public/assets/                 ロゴ、背景、作品画像
-src/components/                共通UIと各セクション
-src/config/site.ts             開催情報とサイト設定
-src/data/works.ts              ローカル作品データ
-src/repositories/              作品データ取得境界
-src/styles/tokens.css          色、書体、余白、モーション
-tests/e2e/                     Playwright画面テスト
-```
+`main` へ push すると GitHub Actions（`.github/workflows/deploy.yml`）が
+そのまま GitHub Pages へ公開します（ビルド工程なし・静的配信）。

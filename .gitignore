@@ -1,9 +1,3 @@
-node_modules
-dist
 .DS_Store
-*.local
-npm-debug.log*
-*.tsbuildinfo
-playwright-report
-test-results
-.design/**/screenshots/
+node_modules/
+.claude/

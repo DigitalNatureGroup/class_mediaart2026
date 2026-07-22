@@ -1,23 +1,288 @@
-<!doctype html>
-<html lang="ja" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="筑波大学の授業 GE72501 メディアアートによる学生メディアアート展「stArt」の公式サイトです。"
-    />
-    <meta name="theme-color" content="#08272d" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@300;400;500;700&amp;family=Syne:wght@400..800&amp;display=swap"
-      rel="stylesheet"
-    />
-    <title>stArt｜学生メディアアート展</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>stArt — メディアアート展 2026 | 筑波大学</title>
+<meta name="description" content="メディアアート展「stArt」2026年7月29日(水)–7月31日(金) 9:00–18:00、筑波大学 春日エリアにて開催。30のはじまりの星が、ひとつの星座になる。入場無料。">
+<meta name="theme-color" content="#06081a">
+<meta property="og:title" content="stArt — MEDIA ART EXHIBITION 2026">
+<meta property="og:description" content="30のはじまりの星が、ひとつの星座になる。2026.7.29–7.31 筑波大学 春日エリア／入場無料">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://digitalnaturegroup.github.io/class_mediaart2026/">
+<meta property="og:image" content="https://digitalnaturegroup.github.io/class_mediaart2026/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" as="image" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Zen+Old+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Instrument+Serif:ital@0;1&family=Yomogi&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== background layers ===== -->
+<div class="bgvideo" aria-hidden="true">
+  <video id="bgVideo" muted loop playsinline autoplay preload="auto" poster="assets/bg-stars-poster.jpg">
+    <source src="assets/bg-stars.mp4" type="video/mp4">
+  </video>
+</div>
+<div class="nebula" aria-hidden="true"></div>
+<canvas id="bgfx" aria-hidden="true"></canvas>
+
+<!-- ===== star journey：縦スクロールで横断していく星座 ===== -->
+<div id="journey" aria-hidden="true">
+  <div class="jy-track" id="jyTrack">
+    <svg class="jy-line" viewBox="0 0 216 100" preserveAspectRatio="none">
+      <polyline points="0,28 54,68 108,36 162,66 216,30" />
+    </svg>
+    <span class="jy-star" style="--jx:0vw; --jy:28vh"></span>
+    <span class="jy-star" style="--jx:54vw; --jy:68vh"></span>
+    <span class="jy-star" style="--jx:108vw; --jy:36vh"></span>
+    <span class="jy-star" style="--jx:162vw; --jy:66vh"></span>
+    <span class="jy-star" style="--jx:216vw; --jy:30vh"></span>
+    <span class="jy-dust" style="top:47vh; --jx:28vw"></span>
+    <span class="jy-dust" style="top:52vh; --jx:82vw"></span>
+    <span class="jy-dust" style="top:46vh; --jx:136vw"></span>
+    <span class="jy-dust" style="top:51vh; --jx:190vw"></span>
+  </div>
+  <span class="jy-aura"></span>
+  <span class="jy-ring"></span>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+<div id="pbar" aria-hidden="true"></div>
+<div id="cursor" aria-hidden="true"></div>
+<div id="cursorRing" aria-hidden="true"></div>
+
+<!-- ===== preloader ===== -->
+<div id="loader" role="presentation">
+  <span class="ld-line"></span>
+  <p class="ld-tag">TSUKUBA&nbsp;MEDIA&nbsp;ART&nbsp;EXHIBITION<small>— 2026 —</small></p>
+  <div class="ld-num"><b>000</b><i>%</i></div>
+  <p class="ld-label">LOADING&nbsp;STARS</p>
+  <div class="ld-stage"><p>ひとりひとりの作品は、<br>それぞれの星。</p></div>
+  <div class="ld-stage"><p>30のはじまりが、<br>ひとつの星座になる。</p></div>
+  <button id="opSkip" type="button">SKIP →</button>
+</div>
+
+<!-- ===== header ===== -->
+<header id="hd">
+  <a class="brand" href="#hero" aria-label="stArt トップへ">
+    <img src="assets/logo.png" alt="stArt">
+    <span>EXHIBITION 2026</span>
+  </a>
+  <nav class="gnav" aria-label="メイン">
+    <a href="#concept" data-spy="concept"><i>01</i>CONCEPT</a>
+    <a href="#supervisor" data-spy="supervisor"><i>02</i>SUPERVISOR</a>
+    <a href="#works" data-spy="works"><i>03</i>WORKS</a>
+    <a href="#visit" data-spy="visit"><i>04</i>VISIT</a>
+  </nav>
+  <button id="menuBtn" type="button" aria-label="メニュー"><b></b></button>
+</header>
+
+<!-- ===== mobile menu ===== -->
+<div id="mmenu" aria-hidden="true">
+  <a class="mlink" href="#concept" style="transition-delay:.06s"><small>01</small>コンセプト</a>
+  <a class="mlink" href="#supervisor" style="transition-delay:.12s"><small>02</small>指導教員</a>
+  <a class="mlink" href="#works" style="transition-delay:.18s"><small>03</small>作品をみる</a>
+  <a class="mlink" href="#visit" style="transition-delay:.24s"><small>04</small>開催情報</a>
+  <p class="minfo">2026.7.29 wed – 7.31 fri&nbsp; 9:00–18:00<br>筑波大学 春日エリア／入場無料</p>
+</div>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section id="hero" data-journey-stop>
+    <div class="kv" aria-hidden="true">
+      <div class="kv-rot">
+        <picture>
+          <source media="(max-width:640px)" srcset="assets/keyvisual-m.jpg">
+          <img src="assets/keyvisual.jpg" alt="" fetchpriority="high">
+        </picture>
+      </div>
+    </div>
+    <div class="hero-in">
+      <p class="h-tag">TSUKUBA&nbsp;MEDIA&nbsp;ART&nbsp;EXHIBITION</p>
+      <div class="h-logo" id="heroLogo" role="img" aria-label="stArt">
+        <img src="assets/logo.png" alt="stArt ロゴ">
+      </div>
+      <p class="h-jp">メディアアート展</p>
+      <div class="h-meta">
+        <p class="h-date">2026.<b>7.29</b> wed — <b>7.31</b> fri</p>
+        <p class="h-place">筑波大学 春日エリア&nbsp;／&nbsp;9:00–18:00</p>
+        <div class="h-chips">
+          <span class="chip gold" id="countChip"></span>
+          <span class="chip">入場無料</span>
+          <span class="chip">予約不要</span>
+        </div>
+      </div>
+    </div>
+    <p class="h-credit">TSUKUBA MEDIA ART CLASS — FINAL EXHIBITION</p>
+    <div class="scrollcue" aria-hidden="true">SCROLL<i></i></div>
+  </section>
+
+  <!-- ticker -->
+  <div class="ticker" id="tickerHero" aria-hidden="true"><div class="trk"></div></div>
+
+  <!-- ============ CONCEPT ============ -->
+  <section id="concept" data-journey-stop>
+    <div class="wrap">
+      <span class="bigidx" aria-hidden="true">01</span>
+      <div class="sechead">
+        <p class="eyebrow">01 / CONCEPT <em>— コンセプト</em></p>
+        <h2 class="ttl"><span class="tline">はじまりの星は、</span><span class="tline">やがて星座になる。</span></h2>
+        <p class="ttl-en">Every beginning is a star.</p>
+      </div>
+
+      <p class="eq" id="eq" role="img" aria-label="stArt は star と art からできた言葉です">
+        <span class="eq-mark" aria-hidden="true">
+          <img class="eq-strt" src="assets/logo-strt.png" alt="">
+          <span class="flip"><b>A</b><s><img src="assets/star-a.png" alt=""></s></span>
+        </span>
+        <span class="sub" aria-hidden="true">= STAR &nbsp;+&nbsp; ART</span>
+      </p>
+
+      <div class="stmt" id="stmt">
+        <p><span class="ln"><span>この展覧会の名前には、</span></span>
+           <span class="ln"><span>ふたつの言葉がかくれています。</span></span></p>
+        <p><span class="ln"><span>受講者ひとりひとりがつくった作品——<b>art</b>は、</span></span>
+           <span class="ln"><span>大きさも、色も、またたきかたも違う、</span></span>
+           <span class="ln"><span>千差万別の星——<b>star</b>。</span></span></p>
+        <p><span class="ln"><span>その多くは、はじめてのメディアアート。</span></span>
+           <span class="ln"><span>つまり、表現のはじまり——<b>stArt</b>です。</span></span></p>
+        <p><span class="ln"><span>30のはじまりの星は3つの部屋にちりばめられ、</span></span>
+           <span class="ln"><span>たがいに光を結んで、</span></span>
+           <span class="ln"><span>わたしたちだけの星座をえがきます。</span></span></p>
+        <p><span class="ln"><span>夜空を見あげるときのように、どうぞゆっくりと。</span></span>
+           <span class="ln"><span>あなたの好きな星を、見つけてください。</span></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SUPERVISOR ============ -->
+  <section id="supervisor" data-journey-stop>
+    <img class="bigstar" src="assets/star.png" alt="" aria-hidden="true">
+    <div class="wrap">
+      <span class="bigidx left" aria-hidden="true">02</span>
+      <div class="sv-grid">
+        <figure class="cheki" id="cheki">
+          <div class="tilt">
+            <span class="pin" aria-hidden="true">✦</span>
+            <img src="assets/ochiai-cheki.png" alt="落合陽一のポートレート(チェキ風フィルム)">
+            <figcaption class="hand">指導教員　落合 陽一<small>SUPERVISOR</small></figcaption>
+          </div>
+        </figure>
+        <div>
+          <p class="sv-label">02 / SUPERVISOR</p>
+          <p class="sv-role">指導教員</p>
+          <h2 class="sv-name">落合 陽一</h2>
+          <p class="sv-romaji">YOICHI&nbsp;OCHIAI</p>
+          <p class="sv-title">筑波大学 図書館情報メディア系 教授</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORKS ============ -->
+  <section id="works" data-journey-stop>
+    <div class="wrap">
+      <span class="bigidx" aria-hidden="true">03</span>
+      <div class="w-head">
+        <div class="sechead" style="margin-bottom:0">
+          <p class="eyebrow">03 / WORKS <em>— 30 STARS</em></p>
+          <h2 class="ttl">30人の、はじまりの星。</h2>
+          <p class="ttl-en">thirty stars, thirty beginnings.</p>
+        </div>
+        <div class="w-controls">
+          <button id="mqToggle" type="button" aria-pressed="false"><i aria-hidden="true"></i><span>自動移動を停止</span></button>
+        </div>
+      </div>
+      <p class="w-hint" id="wHint">カードを選ぶと、作品がひらきます（重ねると流れはひと休み）</p>
+    </div>
+
+    <div class="mq" id="mq" aria-label="作品プレビュー">
+      <div class="mq-rows" id="mqRows"></div>
+    </div>
+  </section>
+
+  <!-- ============ VISIT ============ -->
+  <section id="visit" data-journey-stop>
+    <div class="wrap">
+      <span class="bigidx left" aria-hidden="true">04</span>
+      <div class="sechead">
+        <p class="eyebrow">04 / VISIT <em>— 開催情報</em></p>
+        <h2 class="ttl">星をみに、来てください。</h2>
+        <p class="ttl-en">come see the stars.</p>
+      </div>
+      <div class="v-grid">
+        <dl class="v-list">
+          <div class="v-row"><dt>DATE<small>会期</small></dt>
+            <dd><b>2026.7.29</b> (水) — <b>7.31</b> (金)<br><span class="sm">3日間開催・会期中無休</span></dd></div>
+          <div class="v-row"><dt>TIME<small>時間</small></dt>
+            <dd><b>9:00 — 18:00</b><br><span class="sm">最終日も18:00まで／入退場自由</span></dd></div>
+          <div class="v-row"><dt>VENUE<small>会場</small></dt>
+            <dd>筑波大学 春日エリア<br><b>7A101 / 7A202 / 7A207</b><br>
+            <span class="sm">つくばエクスプレス「つくば」駅より徒歩約10分</span></dd></div>
+          <div class="v-row"><dt>FEE<small>入場料</small></dt>
+            <dd>無料 <span class="sm">（予約不要・どなたでもご覧いただけます）</span></dd></div>
+          <div class="v-row"><dt>HOST<small>開催</small></dt>
+            <dd>筑波大学 開講講義「メディアアート」<br><span class="sm">指導教員：落合陽一</span></dd></div>
+        </dl>
+        <div class="v-map">
+          <h3>ACCESS&nbsp;MAP</h3>
+          <div class="mapframe">
+            <iframe
+              src="https://maps.google.com/maps?q=%E7%AD%91%E6%B3%A2%E5%A4%A7%E5%AD%A6%20%E6%98%A5%E6%97%A5%E3%82%A8%E3%83%AA%E3%82%A2&z=16&hl=ja&output=embed"
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              title="会場マップ：筑波大学 春日エリア" allowfullscreen></iframe>
+          </div>
+          <p class="note">筑波大学 春日エリア 7A棟（7A101・7A202・7A207）。3つの教室をめぐる回遊式の展示です。順路は自由——お好きな星座からどうぞ。</p>
+          <a class="mapbtn" href="https://www.google.com/maps/search/%E7%AD%91%E6%B3%A2%E5%A4%A7%E5%AD%A6%E6%98%A5%E6%97%A5%E3%82%A8%E3%83%AA%E3%82%A2" target="_blank" rel="noopener">
+            GOOGLE MAP で開く ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <button id="toTop" type="button" aria-label="ページの先頭へ">↑</button>
+  <img class="flogo" src="assets/logo.png" alt="stArt">
+  <p class="fsee">— see you under the stars —</p>
+  <p class="fl1">メディアアート展「stArt」<br>筑波大学 開講講義「メディアアート」</p>
+  <p class="fl2">2026.7.29 WED — 7.31 FRI&nbsp;/&nbsp;KASUGA&nbsp;AREA,&nbsp;UNIVERSITY&nbsp;OF&nbsp;TSUKUBA</p>
+  <p class="fnote">※ 本サイトの出展者・作品情報は準備中のサンプルを含みます。<br>© 2026 stArt — Media Art Exhibition</p>
+</footer>
+
+<!-- ===== work modal ===== -->
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="veil" data-close></div>
+  <article class="mcard">
+    <button id="mClose" type="button" aria-label="閉じる" data-close>✕</button>
+    <div class="msig"><canvas id="sigCanvas"></canvas><span class="no" id="mNo"></span></div>
+    <div class="mbody">
+      <div class="mchips" id="mChips"></div>
+      <h3 class="mt" id="mTitle"></h3>
+      <p class="me" id="mEn"></p>
+      <div class="ma"><span class="nm" id="mArtist"></span><span class="dp" id="mDept"></span></div>
+      <p class="md" id="mDesc"></p>
+      <div class="mnav">
+        <button id="mPrev" type="button">← PREV</button>
+        <button id="mNext" type="button">NEXT →</button>
+      </div>
+    </div>
+  </article>
+</div>
+
+<noscript><p style="position:fixed;inset:auto 0 0;z-index:999;background:#111;padding:12px;text-align:center;font-size:12px;color:#fff">このサイトは JavaScript を有効にしてご覧ください。</p></noscript>
+
+<script src="libs/gsap.min.js"></script>
+<script src="libs/ScrollTrigger.min.js"></script>
+<script src="libs/lenis.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/sky.js"></script>
+<script src="js/main.js"></script>
+</body>
 </html>
