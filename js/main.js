@@ -1,5 +1,5 @@
 /* ============================================================
-   stArt — js/main.js
+   stArt ― js/main.js
    preloader / Lenis smooth scroll / GSAP ScrollTrigger 演出
    ticker / modal / filters / cursor / menu
    ============================================================ */
@@ -309,7 +309,7 @@
   function initTickers() {
     const mainUnit =
       '<span class="unit"><em>stArt</em><span class="s">✦</span>MEDIA ART EXHIBITION 2026' +
-      '<span class="s">✦</span>7.29 WED — 7.31 FRI<span class="s">✦</span>10:00–18:00' +
+      '<span class="s">✦</span>7.29 WED ― 7.31 FRI<span class="s">✦</span>10:00―18:00' +
       '<span class="s">✦</span>KASUGA AREA, UNIV. OF TSUKUBA<span class="s">✦</span>FREE ADMISSION<span class="s">✦</span></span>';
     buildTicker($("#tickerHero"), mainUnit, 26, 1);
 
@@ -658,7 +658,7 @@
     } else if (now <= close) {
       chip.innerHTML = `<span class="dot"></span>ただいま開催中`;
     } else {
-      chip.textContent = "全日程終了 — Thank you";
+      chip.textContent = "全日程終了 ― Thank you";
     }
   })();
 
