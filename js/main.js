@@ -446,7 +446,7 @@
       el.addEventListener("click", () => openModal(w.id));
     }
     el.innerHTML = `
-      <span class="thumb"><canvas data-wid="${w.id}" width="10" height="10"></canvas>
+      <span class="thumb"><img src="${w.img || "assets/coming-soon.jpg"}" alt="" loading="lazy">
         <span class="no">No.${w.no}</span>${w.m ? `<span class="rm">${w.m}</span>` : ""}</span>
       <span class="body">
         <span class="t">${w.t}</span>
@@ -482,19 +482,6 @@
       row.appendChild(trk);
       rowsEl.appendChild(row);
     });
-    // 生成アートのサムネイルを一度だけ描画
-    requestAnimationFrame(() => {
-      $$("#mqRows canvas").forEach(cv => {
-        const w = W[+cv.dataset.wid - 1];
-        const r = cv.getBoundingClientRect();
-        const wd = Math.max(r.width, 240), hg = Math.max(r.height, 140);
-        const dpr = FX.DPR();
-        cv.width = wd * dpr; cv.height = hg * dpr;
-        const c = cv.getContext("2d");
-        c.setTransform(dpr, 0, 0, dpr, 0, 0);
-        FX.drawSignature(c, w, wd, hg, 5200 + w.id * 777);
-      });
-    });
   }
 
   const mqToggle = $("#mqToggle");
@@ -509,8 +496,8 @@
   /* ============================================================
      modal
      ============================================================ */
-  const modal = $("#modal"), sig = $("#sigCanvas");
-  let curId = 0, sigRAF = 0, lastFocus = null;
+  const modal = $("#modal"), sigImg = $("#sigImg");
+  let curId = 0, lastFocus = null;
   const filtered = () => W;
 
   function openModal(id) {
@@ -533,18 +520,11 @@
     scrollLock(true);
     lastFocus = document.activeElement;
     $("#mClose").focus({ preventScroll: true });
-    cancelAnimationFrame(sigRAF);
-    const r = sig.parentElement.getBoundingClientRect();
-    const dpr = FX.DPR();
-    sig.width = r.width * dpr; sig.height = r.height * dpr;
-    const c = sig.getContext("2d"); c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const loop = t => { FX.drawSignature(c, w, r.width, r.height, t); if (!REDUCED) sigRAF = requestAnimationFrame(loop); };
-    sigRAF = requestAnimationFrame(loop);
+    if (sigImg) sigImg.src = w.img || "assets/coming-soon.jpg";
   }
   function closeModal() {
     modal.classList.remove("open");
     scrollLock(false);
-    cancelAnimationFrame(sigRAF);
     if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
   modal.addEventListener("click", e => { if (e.target.hasAttribute("data-close")) closeModal(); });
