@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  const { W, CLUSTERS, CATS } = window.DATA;
+  const { W, CATS } = window.DATA;
   const FX = window.SkyFX;
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
@@ -342,7 +342,9 @@
     flip.appendChild(clone);
     const d = clone.getBoundingClientRect().bottom - probe.getBoundingClientRect().top;
     clone.remove();
-    if (isFinite(d)) b.style.bottom = (-d) + "px"; // ボックスをズラしてグリフの底=ベースラインに
+    const fsPx = parseFloat(getComputedStyle(b).fontSize) || 0;
+    // 廻想体マキナはグリフのインクがベースラインの31/1000em上から始まるため、その分さらに下げる
+    if (isFinite(d)) b.style.bottom = (-(d + fsPx * 0.031)) + "px";
   }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignEqA);
   alignEqA();
@@ -445,11 +447,11 @@
     }
     el.innerHTML = `
       <span class="thumb"><canvas data-wid="${w.id}" width="10" height="10"></canvas>
-        <span class="no">No.${w.no}</span><span class="rm">${w.m}</span></span>
+        <span class="no">No.${w.no}</span>${w.m ? `<span class="rm">${w.m}</span>` : ""}</span>
       <span class="body">
         <span class="t">${w.t}</span>
-        <span class="e">${w.e}</span>
-        <span class="meta"><i class="st" style="color:${w.col};background:${w.col}"></i>${w.a}<span class="cat">${CATS[w.c]}</span></span>
+        ${w.e ? `<span class="e">${w.e}</span>` : ""}
+        <span class="meta"><i class="st" style="color:${w.col};background:${w.col}"></i>${w.a}${w.c && CATS[w.c] ? `<span class="cat">${CATS[w.c]}</span>` : ""}</span>
       </span>`;
     return el;
   }
@@ -515,14 +517,18 @@
     const w = W.find(x => x.id === id); if (!w) return;
     curId = id;
     $("#mNo").textContent = "WORK No." + w.no;
-    $("#mChips").innerHTML =
-      `<span class="c-star"><i style="color:${w.col};background:${w.col}"></i>SPECTRAL ${["B", "A", "O", "F", "G", "K"][w.s] || "A"}型</span>` +
-      `<span>${CATS[w.c]}</span><span>${w.m} 展示室</span>`;
+    const chips = [];
+    if (w.c && CATS[w.c]) chips.push(`<span>${CATS[w.c]}</span>`);
+    if (w.m) chips.push(`<span>${w.m} 展示室</span>`);
+    const chipsEl = $("#mChips");
+    chipsEl.innerHTML = chips.join("");
+    chipsEl.style.display = chips.length ? "" : "none";
     $("#mTitle").textContent = w.t;
-    $("#mEn").textContent = w.e;
+    $("#mEn").textContent = w.e || "";
+    $("#mEn").style.display = w.e ? "" : "none";
     $("#mArtist").textContent = w.a;
-    $("#mDept").textContent = w.g;
-    $("#mDesc").textContent = w.d;
+    $("#mDept").textContent = w.g || "";
+    $("#mDesc").textContent = w.d || "作品の詳細は準備中です。会場でぜひ実物をご覧ください。";
     modal.classList.add("open");
     scrollLock(true);
     lastFocus = document.activeElement;

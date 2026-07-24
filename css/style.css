@@ -2,6 +2,14 @@
    stArt — MEDIA ART EXHIBITION 2026
    css/style.css
    ============================================================ */
+
+/* ============ web font: 廻想体 マキナB（もじワク研究） ============ */
+@font-face{
+  font-family:"Kaiso Makina B";
+  src:url("../assets/fonts/KaisoMakinaB.woff2") format("woff2");
+  font-weight:400 700;
+  font-display:swap;
+}
 :root{
   --bg:#06081a;
   --bg2:#0a0e24;
@@ -12,10 +20,10 @@
   --gold:#ffd98a;
   --ice:#9fc4ff;
   --rose:#ffaab6;
-  --serif:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
-  --sans:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;
-  --en:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
-  --disp:"Instrument Serif",Georgia,serif;
+  --serif:"Kaiso Makina B","Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --sans:"Kaiso Makina B","Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;
+  --en:"Kaiso Makina B","Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --disp:"Kaiso Makina B","Instrument Serif",Georgia,serif;
   --hand:"Yomogi","Zen Kaku Gothic New",cursive;
   --max:1120px;
   --pad:clamp(20px,5vw,48px);
@@ -317,10 +325,10 @@ h2.ttl .tline{ display:block; }
 }
 .eq .eq-mark{ position:relative; display:inline-block; width:var(--eqw); }
 .eq .eq-strt{ width:100%; display:block; }
-/* flip の箱＝文字ボックス（底を文字のベースラインに、高さ=文字高の65%） */
+/* flip の箱＝文字ボックス（新ロゴは余白なし＝画像全体が文字箱） */
 .eq .flip{
-  position:absolute; left:50.15%; bottom:15.5%; transform:translateX(-50%);
-  width:44%; height:65%; perspective:520px;
+  position:absolute; left:51.32%; bottom:0; transform:translateX(-50%);
+  width:52%; height:100%; perspective:520px;
 }
 .eq .flip b, .eq .flip s{
   position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center;
@@ -329,14 +337,14 @@ h2.ttl .tline{ display:block; }
 }
 .eq .flip b{
   font-family:var(--disp); font-weight:400; font-style:normal; line-height:.8;
-  font-size:calc(var(--eqw) * .27);
+  font-size:calc(var(--eqw) * .402);
   color:var(--gold); transform:rotateX(0);
 }
 .eq .flip s{ transform:rotateX(180deg); }
 .eq .flip s img{
-  /* 公式ロゴ実測: 星の高さ=文字高の2.43倍、ベースラインから33%下へ */
-  height:243%; width:auto; display:block;
-  transform:translateY(13.7%);
+  /* 公式ロゴ実測: 星の高さ=文字高の1.745倍、ベースラインから37%下へ */
+  height:174.5%; width:auto; display:block;
+  transform:translateY(21%);
   filter:drop-shadow(0 0 18px rgba(238,241,251,.35));
 }
 .eq .flip.go b{ transform:rotateX(180deg); }
