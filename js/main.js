@@ -411,28 +411,6 @@
     addEventListener("start:journey-force", journeyUpdate); // 同期更新用（検証・保険）
     if (lenis) lenis.on("scroll", journeyRequest);
 
-    // スナップ補助：スクロールが静止したら、近くのセクション頭へそっと吸着
-    if (lenis && !REDUCED) {
-      let snapT = null, snapping = false;
-      lenis.on("scroll", e => {
-        if (snapping) return;
-        if (Math.abs(e.velocity) > .2) { if (snapT) { clearTimeout(snapT); snapT = null; } return; }
-        if (snapT) return;
-        snapT = setTimeout(() => {
-          snapT = null;
-          let best = null, bd = 1e9;
-          STOPS.forEach(el => {
-            const d = Math.abs(scrollY - el.offsetTop);
-            if (d < bd) { bd = d; best = el.offsetTop; }
-          });
-          if (best !== null && bd > 3 && bd < innerHeight * .3) {
-            snapping = true;
-            lenis.scrollTo(best, { duration: .9, onComplete: () => { snapping = false; } });
-            setTimeout(() => { snapping = false; }, 1400);
-          }
-        }, 260);
-      });
-    }
   }
 
   /* ============================================================
