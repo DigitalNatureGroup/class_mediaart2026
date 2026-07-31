@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  const { W, CATS } = window.DATA;
+  const { W, TAGS } = window.DATA;
   const FX = window.SkyFX;
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
@@ -414,8 +414,10 @@
   }
 
   /* ============================================================
-     works marquee：作品がめぐる回廊（2列・逆方向・無限ループ）
+     works：回廊（2列マーキー）と 一覧（グリッド）
      ============================================================ */
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
   function makeCard(w, dup) {
     const el = document.createElement(dup ? "div" : "button");
     el.className = "card";
@@ -424,12 +426,12 @@
       el.addEventListener("click", () => openModal(w.id));
     }
     el.innerHTML = `
-      <span class="thumb"><img src="${w.img || "assets/coming-soon.jpg"}" alt="" loading="lazy">
-        <span class="no">No.${w.no}</span>${w.m ? `<span class="rm">${w.m}</span>` : ""}</span>
+      <span class="thumb"><img src="${w.img}" alt="" loading="lazy">
+        ${w.no ? `<span class="no">No.${esc(w.no)}</span>` : ""}</span>
       <span class="body">
-        <span class="t">${w.t}</span>
-        ${w.e ? `<span class="e">${w.e}</span>` : ""}
-        <span class="meta"><i class="st" style="color:${w.col};background:${w.col}"></i>${w.a}${w.c && CATS[w.c] ? `<span class="cat">${CATS[w.c]}</span>` : ""}</span>
+        <span class="t">${esc(w.t)}</span>
+        <span class="meta"><i class="st" style="color:${w.col};background:${w.col}"></i>${esc(w.a)}</span>
+        ${w.tags[0] ? `<span class="cat">${esc(w.tags[0])}</span>` : ""}
       </span>`;
     return el;
   }
@@ -462,6 +464,53 @@
     });
   }
 
+  /* ---- 一覧（グリッド）＋作品形態でしぼり込み ---- */
+  let glTag = "all";
+  function buildGalleryFilter() {
+    const wrap = $("#glFilter");
+    if (!wrap) return;
+    wrap.innerHTML = `<button type="button" class="act" data-tag="all">すべて<i>${W.length}</i></button>` +
+      TAGS.map(t => `<button type="button" data-tag="${esc(t)}">${esc(t)}<i>${W.filter(w => w.tags.includes(t)).length}</i></button>`).join("");
+    wrap.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      glTag = b.dataset.tag;
+      $$("#glFilter button").forEach(x => x.classList.toggle("act", x === b));
+      buildGallery();
+    });
+  }
+  function buildGallery() {
+    const grid = $("#glGrid");
+    if (!grid) return;
+    const list = glTag === "all" ? W : W.filter(w => w.tags.includes(glTag));
+    grid.innerHTML = "";
+    list.forEach(w => {
+      const li = document.createElement("li");
+      li.className = "gl-item";
+      li.appendChild(makeCard(w, false));
+      grid.appendChild(li);
+    });
+    const cnt = $("#glCount");
+    if (cnt) cnt.textContent = `${list.length}件`;
+    if (HAS) gsap.from(grid.children, { y: 22, autoAlpha: 0, duration: .5, stagger: .025, ease: "power3.out", clearProps: "all" });
+  }
+
+  /* ---- 表示切替 ---- */
+  function setView(list) {
+    document.body.classList.toggle("listmode", list);
+    const a = $("#tgMq"), b = $("#tgList");
+    if (a && b) {
+      a.classList.toggle("act", !list); b.classList.toggle("act", list);
+      a.setAttribute("aria-selected", String(!list)); b.setAttribute("aria-selected", String(list));
+    }
+    const hint = $("#wHint");
+    if (hint) hint.textContent = list ? "カードを選ぶと、作品の詳しい説明がひらきます" : "カードを選ぶと、作品がひらきます（重ねると流れはひと休み）";
+    if (list && !$("#glGrid").children.length) buildGallery();
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+  }
+  const tgMq = $("#tgMq"), tgList = $("#tgList");
+  if (tgMq) tgMq.addEventListener("click", () => setView(false));
+  if (tgList) tgList.addEventListener("click", () => setView(true));
+
   const mqToggle = $("#mqToggle");
   if (mqToggle) mqToggle.addEventListener("click", () => {
     const mq = $("#mq");
@@ -481,24 +530,23 @@
   function openModal(id) {
     const w = W.find(x => x.id === id); if (!w) return;
     curId = id;
-    $("#mNo").textContent = "WORK No." + w.no;
-    const chips = [];
-    if (w.c && CATS[w.c]) chips.push(`<span>${CATS[w.c]}</span>`);
-    if (w.m) chips.push(`<span>${w.m} 展示室</span>`);
+    $("#mNo").textContent = w.no ? "WORK No." + w.no : "WORK";
     const chipsEl = $("#mChips");
-    chipsEl.innerHTML = chips.join("");
-    chipsEl.style.display = chips.length ? "" : "none";
+    chipsEl.innerHTML = w.tags.map(t => `<span>${esc(t)}</span>`).join("");
+    chipsEl.style.display = w.tags.length ? "" : "none";
     $("#mTitle").textContent = w.t;
-    $("#mEn").textContent = w.e || "";
-    $("#mEn").style.display = w.e ? "" : "none";
     $("#mArtist").textContent = w.a;
-    $("#mDept").textContent = w.g || "";
+    const pt = $("#mPoint");
+    if (pt) pt.style.display = w.point ? "" : "none";
     $("#mDesc").textContent = w.d || "作品の詳細は準備中です。会場でぜひ実物をご覧ください。";
+    const nt = $("#mNote");
+    if (nt) { nt.textContent = w.note || ""; nt.style.display = w.note ? "" : "none"; }
     modal.classList.add("open");
     scrollLock(true);
     lastFocus = document.activeElement;
     $("#mClose").focus({ preventScroll: true });
-    if (sigImg) sigImg.src = w.img || "assets/coming-soon.jpg";
+    if (sigImg) sigImg.src = w.img;
+    const card = $(".mcard"); if (card) card.scrollTop = 0;
   }
   function closeModal() {
     modal.classList.remove("open");
@@ -628,6 +676,7 @@
   initTickers();
   initScrollFX();
   buildMarquee();
+  buildGalleryFilter();
   initJourney();
   runLoader();
 })();

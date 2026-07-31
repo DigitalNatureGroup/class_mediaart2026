@@ -196,6 +196,10 @@
           <p class="ttl-en">thirty stars, thirty beginnings.</p>
         </div>
         <div class="w-controls">
+          <div class="viewtg" role="tablist" aria-label="表示切替">
+            <button id="tgMq" class="act" type="button" role="tab" aria-selected="true">✦ 回廊</button>
+            <button id="tgList" type="button" role="tab" aria-selected="false">☰ 一覧</button>
+          </div>
           <button id="mqToggle" type="button" aria-pressed="false"><i aria-hidden="true"></i><span>自動移動を停止</span></button>
         </div>
       </div>
@@ -204,6 +208,16 @@
 
     <div class="mq" id="mq" aria-label="作品プレビュー">
       <div class="mq-rows" id="mqRows"></div>
+    </div>
+
+    <div class="wrap">
+      <div id="gallery">
+        <div class="gl-head">
+          <div class="gl-filter" id="glFilter" aria-label="作品形態でしぼり込み"></div>
+          <p class="gl-count" id="glCount"></p>
+        </div>
+        <ol class="gl-grid" id="glGrid"></ol>
+      </div>
     </div>
   </section>
 
@@ -266,9 +280,10 @@
     <div class="mbody">
       <div class="mchips" id="mChips"></div>
       <h3 class="mt" id="mTitle"></h3>
-      <p class="me" id="mEn"></p>
-      <div class="ma"><span class="nm" id="mArtist"></span><span class="dp" id="mDept"></span></div>
+      <div class="ma"><span class="nm" id="mArtist"></span></div>
+      <p class="mpoint" id="mPoint">鑑賞ポイント</p>
       <p class="md" id="mDesc"></p>
+      <p class="mnote" id="mNote"></p>
       <div class="mnav">
         <button id="mPrev" type="button">← PREV</button>
         <button id="mNext" type="button">NEXT →</button>

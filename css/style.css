@@ -423,7 +423,7 @@ h2.ttl .tline{ display:block; }
 .card .t{ display:block; font-family:var(--serif); font-size:18px; letter-spacing:.1em; line-height:1.6; }
 .card .e{ display:block; font-family:var(--en); font-size:10px; letter-spacing:.26em; color:var(--ink-faint); margin-top:3px; text-transform:uppercase; }
 .card .meta{ display:flex; align-items:center; gap:8px; margin-top:11px; font-size:12px; color:var(--ink-dim); letter-spacing:.14em; }
-.card .meta .cat{ border:1px solid var(--hair); border-radius:999px; padding:2.5px 10px; font-size:11px; }
+.card .cat{ display:inline-block; margin-top:10px; border:1px solid var(--hair); border-radius:999px; padding:3px 11px; font-size:10.5px; color:var(--ink-faint); letter-spacing:.1em; }
 .card .meta .st{ width:7px; height:7px; border-radius:50%; flex:none; box-shadow:0 0 8px currentColor; }
 .card:hover .t{ color:#fff; }
 .card::after{ content:"→"; position:absolute; right:14px; bottom:13px; font-family:var(--en); font-size:12px;
@@ -459,7 +459,17 @@ h2.ttl .tline{ display:block; }
 .ma{ display:flex; align-items:baseline; gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid var(--hair); }
 .ma .nm{ font-size:16.5px; letter-spacing:.16em; font-weight:500; }
 .ma .dp{ font-size:12px; letter-spacing:.1em; color:var(--ink-faint); }
-.md{ margin-top:14px; font-size:14.5px; line-height:2.25; letter-spacing:.07em; color:var(--ink-dim); }
+.md{ margin-top:14px; font-size:14.5px; line-height:2.25; letter-spacing:.07em; color:var(--ink-dim); white-space:pre-line; }
+.mpoint{
+  margin-top:18px; display:inline-flex; align-items:center; gap:8px;
+  font-size:11px; letter-spacing:.24em; color:var(--gold);
+}
+.mpoint::before{ content:"✦"; font-size:9px; }
+.mnote{
+  margin-top:18px; padding:12px 15px; border-radius:10px;
+  background:rgba(255,217,138,.07); border:1px solid rgba(255,217,138,.28);
+  font-size:12.5px; line-height:1.9; letter-spacing:.06em; color:var(--gold);
+}
 .mnav{ display:flex; justify-content:space-between; align-items:center; margin-top:22px; padding-top:16px; border-top:1px solid var(--hair); }
 .mnav button{ font-family:var(--en); font-size:11.5px; letter-spacing:.26em; color:var(--ink-dim); padding:10px 4px; transition:.3s; display:flex; align-items:center; gap:8px; }
 .mnav button:hover{ color:var(--gold); }
@@ -576,6 +586,34 @@ main > section[data-journey-stop]{
   will-change:transform;
 }
 footer{ z-index:2; }
+
+/* ============ 表示切替（回廊 / 一覧） ============ */
+.viewtg{ display:flex; border:1px solid var(--hair); border-radius:999px; padding:3px; background:rgba(10,14,36,.45); }
+.viewtg button{
+  font-size:12px; font-weight:500; letter-spacing:.18em;
+  padding:9px 20px; border-radius:999px; color:var(--ink-dim); transition:.35s;
+}
+.viewtg button.act{ background:rgba(238,241,251,.12); color:var(--ink); box-shadow:inset 0 0 0 1px rgba(238,241,251,.14); }
+
+/* ============ 一覧（グリッド） ============ */
+#gallery{ display:none; margin-top:34px; position:relative; z-index:2; }
+body.listmode #gallery{ display:block; }
+body.listmode .mq{ display:none; }
+body.listmode #mqToggle{ display:none; }
+.gl-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:26px; }
+.gl-filter{ display:flex; gap:8px; flex-wrap:wrap; }
+.gl-filter button{
+  font-size:11.5px; letter-spacing:.1em; color:var(--ink-dim);
+  border:1px solid var(--hair); border-radius:999px; padding:8px 15px; transition:.3s;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.gl-filter button i{ font-style:normal; font-size:9.5px; color:var(--ink-faint); font-family:var(--en); }
+.gl-filter button:hover{ color:var(--ink); border-color:rgba(238,241,251,.3); }
+.gl-filter button.act{ color:var(--gold); border-color:rgba(255,217,138,.55); background:rgba(255,217,138,.07); }
+.gl-filter button.act i{ color:var(--gold); }
+.gl-count{ font-family:var(--en); font-size:11.5px; letter-spacing:.2em; color:var(--ink-faint); white-space:nowrap; }
+.gl-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(248px,1fr)); gap:16px; list-style:none; }
+.gl-item .card{ width:100%; height:100%; }
 
 /* ============ works marquee（作品がめぐる回廊） ============ */
 .w-controls #mqToggle{
